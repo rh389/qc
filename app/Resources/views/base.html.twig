@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% include 'BraincraftedBootstrapBundle::_stylesheets.html.twig' %}
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span> m c e
+            </a>
+            <a class="brand" href="#">Quality Conveyors</a>
+            <!--/.nav-collapse -->
+            {{ knp_menu_render('QCAppBundle:Builder:mainMenu', {'nav_type': 'navbar'}) }}
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+{% include 'BraincraftedBootstrapBundle::_javascripts.html.twig' %}
+{% block javascripts %}{% endblock %}
+</body>
 </html>

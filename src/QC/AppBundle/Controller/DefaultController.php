@@ -15,6 +15,17 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return Response::create('Hello!');
+        return $this->render('QCAppBundle:Default:index.html.twig', array( 'name'=>'Rob'
+        ));
+    }
+
+    /**
+     * @Route("/something")
+     * @Template()
+     */
+    public function somethingAction()
+    {
+        return $this->render('QCAppBundle:Default:index.html.twig', array( 'name'=>'Rob'
+        ));
     }
 }
