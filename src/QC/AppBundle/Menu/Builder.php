@@ -11,10 +11,8 @@ class Builder extends ContainerAware
         $menu = $factory->createItem('root');
 
         $menu->addChild('Home', array('uri' => 'something'));
-        $child = $menu->addChild('About Me', array(
-            'uri' => '/something'
-        ));
-        $child->addChild('Home2', array('uri'=>'/'));
+        $child = $menu->addChild('Customers');
+        $child->addChild('List customers', array('uri'=>'customers'));
         // ... add more children
 
         return $menu;
