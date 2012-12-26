@@ -12,7 +12,7 @@ class Builder extends ContainerAware
 
         $menu->addChild('Home', array('uri' => 'something'));
         $child = $menu->addChild('Customers');
-        $child->addChild('List customers', array('uri'=>'customers'));
+        $child->addChild('List customers', array('route'=>'customers'));
         // ... add more children
 
         return $menu;

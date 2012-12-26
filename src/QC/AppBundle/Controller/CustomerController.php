@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomerController extends Controller
 {
     /**
-     * @Route("/customers")
+     * @Route("/customers", name="customers")
      * @Template("QCAppBundle:Customer:list.html.twig")
      */
     public function indexAction()

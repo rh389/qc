@@ -1,5 +1,5 @@
 qc_app:
-    resource: "@QCAppBundle/Controller/"
+    resource: "@QCAppBundle/Controller"
     type:     annotation
     prefix:   /
 
