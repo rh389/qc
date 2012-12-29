@@ -10,6 +10,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 
 use QC\AppBundle\Entity\Customer;
 use QC\AppBundle\Entity\CustomerContact;
+use QC\AppBundle\Entity\Job;
+use QC\AppBundle\Entity\JobItem;
 
 class ImportCommand extends ContainerAwareCommand
 {
@@ -104,8 +106,85 @@ class ImportCommand extends ContainerAwareCommand
                     $resultSet->MoveNext();
                 }
 
-                $entityManager->flush();
+                $resultSet = $connection->Execute("
+                SELECT
+                    [Job No],
+                    [Company],
+                    [Date],
+                    [Date Required],
+                    [Order No],
+                    [Drg No],
+                    [Description],
+                    [Notes],
+                    [Author],
+                    [Status],
+                    [Complete]
+                FROM [Job File]");
 
+
+                /** @var $jobItemModels JobItem[] */
+                $jobItemModels = [];
+                while (!$resultSet->EOF) {
+                    $jobModel = new Job();
+
+                    $dateCreated = date_create_from_format('d/m/Y H:i:s', utf8_encode($resultSet->Fields(2)->value));
+                    if(!$dateCreated){
+                        $dateCreated = date_create_from_format('d/m/Y', utf8_encode($resultSet->Fields(2)->value));
+                    }
+                    //echo $resultSet->Fields(3)->value;
+                    $dateRequired = date_create_from_format('d/m/Y H:i:s', utf8_encode($resultSet->Fields(3)->value));
+                    if(!$dateRequired){
+                        $dateRequired = date_create_from_format('d/m/Y', utf8_encode($resultSet->Fields(3)->value));
+                    }
+                    if(!$dateRequired) $dateRequired = null;
+                    if(!$dateCreated) $dateCreated = null;
+
+                    $jobModel->setId(intval($resultSet->Fields(0)->value));
+                    $description = ''.utf8_encode($resultSet->Fields(6)->value);
+
+                    $matches = [];
+
+                    if(preg_match_all('/[ ]*(\d)+[- ]*(off|)(.*)/i', $description, $matches)){
+                        foreach($matches[0] as $i=>$line){
+                            $jobItemModel = new JobItem();
+                            $jobItemModel
+                                ->setQuantity(intval($matches[1][$i]))
+                                ->setDescription(trim($matches[3][$i]))
+                            ;
+                            $jobModel->addItem($jobItemModel);
+                            $jobItemModels[] = $jobItemModel;
+                            $description = str_replace($line, '', $description);
+                        }
+                    }
+
+                    $jobModel
+                        ->setDateCreated($dateCreated)
+                        ->setDateRequired($dateRequired)
+                        ->setOrderReference(utf8_encode($resultSet->Fields(4)->value))
+                        ->setDrawingNumber(utf8_encode($resultSet->Fields(5)->value))
+                        ->setDescription(trim($description))
+                        ->setNote(utf8_encode($resultSet->Fields(7)->value))
+                        ->setCreatedBy(utf8_encode($resultSet->Fields(8)->value))
+                        ->setStatus(utf8_encode($resultSet->Fields(9)->value))
+                        ->setCompleted(utf8_encode($resultSet->Fields(10)->value)?true:false)
+                    ;
+
+
+
+                    $customer = $entityManager->getRepository('QCAppBundle:Customer')->findOneByName($resultSet->Fields(1)->value);
+                    $jobModel->setCustomer($customer);
+                    //$jobModel->setItems(new \Doctrine\Common\Collections\ArrayCollection($jobItemModels));
+                    $entityManager->persist($jobModel);
+
+                    $resultSet->MoveNext();
+                }
+
+                $metadata = $entityManager->getClassMetaData(get_class(new Job()));
+
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+
+                $entityManager->flush();
                 $connection->Close();
             }
             catch(\Exception $e){

@@ -2,4 +2,8 @@
 
 {% block body %}
 <h1>Customer list</h1>
+
+    {% for customer in customers %}
+        <li><a href="{{ path('customer', {'id':customer.id }) }}">{{ customer.name|e }}</a></li>
+    {% endfor %}
 {% endblock %}

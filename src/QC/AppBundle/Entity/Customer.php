@@ -86,11 +86,24 @@ class Customer
     private $contacts;
 
     /**
+     * @var Job[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Job", mappedBy="customer")
+     */
+    private $jobs;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="archived", type="boolean")
      */
     private $archived=false;
+
+
+    public function __construct(){
+        $this->contacts = new ArrayCollection();
+        $this->jobs = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -287,6 +300,24 @@ class Customer
     public function getContacts()
     {
         return $this->contacts;
+    }
+
+    /**
+     * @param $jobs
+     * @return Customer
+     */
+    public function setJobs($jobs)
+    {
+        $this->jobs = $jobs;
+        return $this;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|Job[]
+     */
+    public function getJobs()
+    {
+        return $this->jobs;
     }
 }
 
