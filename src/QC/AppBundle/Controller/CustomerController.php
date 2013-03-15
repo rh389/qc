@@ -48,9 +48,9 @@ class CustomerController extends FOSRestController
     {
         //die($this->get('kernel')->getEnvironment());
         $customer = $this->getDoctrine()->getRepository('QCAppBundle:Customer')->find($id);
-        $form = $this->createForm(new CustomerAddressType(), $customer);
+        $editAddressForm = $this->createForm(new CustomerAddressType(), $customer);
 
-        return array('customer'=>$customer, 'form'=>$form->createView());
+        return array('customer'=>$customer, 'editAddressForm'=>$editAddressForm->createView());
     }
 
     /**

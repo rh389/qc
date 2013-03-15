@@ -9,6 +9,9 @@
             padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
         }
     </style>
+    {% stylesheets 'bundles/qcapp/css/*' output='css/additional.css' filter='cssrewrite' %}
+        <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+    {% endstylesheets %}
     {% block stylesheets %}{% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 
@@ -42,8 +45,10 @@
 
 </body>
 {% javascripts
-    '@QCAppBundle/Resources/js/jquery-1.8.3.min.js'
-    '@QCAppBundle/Resources/js/AjaxForms.js'
+    '@QCAppBundle/Resources/public/js/jquery-1.8.3.min.js'
+    '@QCAppBundle/Resources/public/js/jquery.dataTables.min.js'
+    '@QCAppBundle/Resources/public/js/bootstrap.dataTables.js'
+    '@QCAppBundle/Resources/public/js/AjaxForms.js'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
