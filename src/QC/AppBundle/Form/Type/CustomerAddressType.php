@@ -11,10 +11,18 @@ class CustomerAddressType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('address1')
-            ->add('address2')
-            ->add('address3')
-            ->add('address4')
+            ->add('address1', 'text', array(
+                'label'=>'Address 1'
+            ))
+            ->add('address2', 'text', array(
+                'label'=>'Address 2'
+            ))
+            ->add('address3', 'text', array(
+                'label'=>'Address 3'
+            ))
+            ->add('address4', 'text', array(
+                'label'=>'Address 4'
+            ))
         ;
     }
 
