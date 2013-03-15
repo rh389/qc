@@ -5,7 +5,7 @@ namespace QC\AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class CustomerType extends AbstractType
+class CustomerAddressType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -319,5 +319,19 @@ class Customer
     {
         return $this->jobs;
     }
+
+    /**
+     * @return Job
+     */
+    public function getMostRecentJob(){
+        /** @var $mostRecentJob Job */
+        $mostRecentJob = null;
+        foreach($this->getJobs() as $job){
+            if(!$mostRecentJob || ($job->getId() > $mostRecentJob->getId())){
+                $mostRecentJob = $job;
+            }
+        }
+        return $mostRecentJob;
+    }
 }
 

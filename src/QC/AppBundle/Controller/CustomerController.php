@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
 use QC\AppBundle\Entity\Customer;
 
-use QC\AppBundle\Form\Type\CustomerType;
+use QC\AppBundle\Form\Type\CustomerAddressType;
 
 use FOS\RestBundle\Controller\FOSRestController;
 
@@ -25,8 +25,18 @@ class CustomerController extends FOSRestController
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getRepository('QCAppBundle:Customer')->findAll();
-        return array( 'customers'=>$customers);
+        /** @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+        /** @var $qb \Doctrine\ORM\QueryBuilder **/
+        $qb = $em->createQueryBuilder();
+
+        $query = $em->createQuery('SELECT c.id AS customerId, c.name AS customerName, MAX(j.id) as maxJobId, COUNT(j) as jobCount FROM QCAppBundle:Customer c LEFT JOIN c.jobs j GROUP BY c.id ORDER BY c.name ASC')->setHydrationMode(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        /** @var $rows Customer[] */
+        $rows = ($query->getResult());
+
+        //$customers = $this->getDoctrine()->getRepository('QCAppBundle:Customer')->findAll();
+        return array( 'rows'=>$rows);
     }
 
     /**
@@ -38,7 +48,7 @@ class CustomerController extends FOSRestController
     {
         //die($this->get('kernel')->getEnvironment());
         $customer = $this->getDoctrine()->getRepository('QCAppBundle:Customer')->find($id);
-        $form = $this->createForm(new CustomerType(), $customer);
+        $form = $this->createForm(new CustomerAddressType(), $customer);
 
         return array('customer'=>$customer, 'form'=>$form->createView());
     }
@@ -55,7 +65,7 @@ class CustomerController extends FOSRestController
             return JsonResponse::create(array(), 404);
         }
 
-        $form = $this->createForm(new CustomerType(), $customer);
+        $form = $this->createForm(new CustomerAddressType(), $customer);
         $form->bind($request);
 
         if ($form->isValid()){

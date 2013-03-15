@@ -1,9 +1,39 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-<h1>Customer list</h1>
 
-    {% for customer in customers %}
-        <li><a href="{{ path('customer', {'id':customer.id }) }}">{{ customer.name|e }}</a></li>
+
+<h1>Customer list</h1>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="customerList">
+    <thead>
+    <tr>
+        <th>Company name</th>
+        <th>Latest job</th>
+        <th>Job count</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for row in rows%}
+        <tr>
+            <td><a href="{{ path('customer', {'id':row.customerId }) }}">{{ row.customerName|e }}</a></td>
+            <td>{{ row.maxJobId ? row.maxJobId : '' | e }}</td>
+            <td>{{ row.jobCount }}</td>
+        </tr>
     {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#customerList').hide();
+        $('#customerList').dataTable( {
+            "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+            "sPaginationType": "bootstrap"
+        } );
+        $('#customerList').show();
+    } );
+</script>
 {% endblock %}
