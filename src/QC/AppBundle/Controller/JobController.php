@@ -38,4 +38,15 @@ class JobController extends FOSRestController
         //$customers = $this->getDoctrine()->getRepository('QCAppBundle:Customer')->findAll();
         return array( 'rows'=>$rows);
     }
+
+    /**
+     * @Method("GET")
+     * @Route("/job/{id}", name="job")
+     * @Template("QCAppBundle:Job:view.html.twig")
+     */
+    public function viewAction($id)
+    {
+        $job = $this->getDoctrine()->getRepository('QCAppBundle:Job')->find($id);
+        return array('job'=>$job);
+    }
 }

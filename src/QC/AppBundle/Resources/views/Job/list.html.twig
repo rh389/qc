@@ -9,16 +9,13 @@
         <tr>
             <th>Job</th>
             <th>Company name</th>
-
         </tr>
         </thead>
         <tbody>
-
         {% for row in rows%}
             <tr>
                 <td>{{ row.jobId | e }}</td>
                 <td>{{ row.customerName|e }}</td>
-
             </tr>
         {% endfor %}
         </tbody>

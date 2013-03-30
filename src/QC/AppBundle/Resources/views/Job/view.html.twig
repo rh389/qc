@@ -1,0 +1,39 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <h1 id="display-job-name">{{ job.id }}</h1>
+    <!-- Button to trigger modal -->
+
+
+
+    <fieldset><legend>Jobs</legend>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="itemList" style="display:none">
+            <thead>
+            <tr>
+                <th>Job</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in job.items%}
+                <tr>
+                    <td>{{ row.id | e }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </fieldset>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#itemList').hide();
+            $('#itemList').dataTable( {
+                "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+                "sPaginationType": "bootstrap"
+            } );
+            $('#itemList').show();
+        } );
+    </script>
+{% endblock %}
